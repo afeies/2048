@@ -62,7 +62,16 @@ HTMLActuator.prototype.addTile = function (tile) {
   this.applyClasses(wrapper, classes);
 
   inner.classList.add("tile-inner");
-  inner.textContent = tile.value;
+
+  // Show the value in binary, split into 4-bit groups (one per line) so
+  // big values stack vertically instead of shrinking to an unreadable size.
+  var nibbles = this.toNibbles(tile.value);
+  var bits    = document.createElement("span");
+  bits.classList.add("bits");
+  bits.textContent = nibbles.join("\n");
+  inner.classList.add("bits-lines-" + nibbles.length);
+  inner.setAttribute("title", tile.value);
+  inner.appendChild(bits);
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
@@ -88,6 +97,18 @@ HTMLActuator.prototype.addTile = function (tile) {
 
   // Put the tile on the board
   this.tileContainer.appendChild(wrapper);
+};
+
+// 2048 -> ["1000", "0000", "0000"]; groups are taken from the right.
+HTMLActuator.prototype.toNibbles = function (value) {
+  var binary  = value.toString(2);
+  var nibbles = [];
+
+  for (var end = binary.length; end > 0; end -= 4) {
+    nibbles.unshift(binary.slice(Math.max(0, end - 4), end));
+  }
+
+  return nibbles;
 };
 
 HTMLActuator.prototype.applyClasses = function (element, classes) {
@@ -126,7 +147,7 @@ HTMLActuator.prototype.updateBestScore = function (bestScore) {
 
 HTMLActuator.prototype.message = function (won) {
   var type    = won ? "game-won" : "game-over";
-  var message = won ? "You win!" : "Game over!";
+  var message = won ? "ACCESS GRANTED" : "SYSTEM FAILURE";
 
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;

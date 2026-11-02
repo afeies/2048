@@ -1,0 +1,256 @@
+/* Matrix / terminal theme. Loaded after main.css and overrides it. */
+
+:root {
+  --green:      #00ff41;
+  --green-mid:  #00cc33;
+  --green-dim:  #00802a;
+  --green-deep: #001a07;
+  --font-mono:  "Share Tech Mono", "Courier New", Courier, monospace;
+}
+
+/* ---------- Page ---------- */
+
+html {
+  background: #000; }
+
+/* Transparent so the rain canvas (z-index -1) shows through. */
+body {
+  background: transparent;
+  color: var(--green-mid);
+  font-family: var(--font-mono); }
+
+html, body {
+  font-family: var(--font-mono); }
+
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.55; }
+
+/* CRT scanlines over everything; clicks pass straight through. */
+body:after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 3px); }
+
+/* Dark panel behind the content so text stays readable over the rain.
+   A spread shadow is used so the layout widths from main.css don't change. */
+.container {
+  background: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 0 24px rgba(0, 0, 0, 0.85); }
+
+::selection {
+  background: var(--green);
+  color: #000; }
+
+a {
+  color: var(--green); }
+
+hr {
+  border-bottom-color: rgba(0, 255, 65, 0.25); }
+
+strong {
+  color: var(--green); }
+
+/* ---------- Heading ---------- */
+
+h1.title {
+  color: var(--green);
+  font-weight: normal;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.8), 0 0 24px rgba(0, 255, 65, 0.4); }
+
+h1.title:after {
+  content: "_";
+  animation: cursor-blink 1s steps(1) infinite; }
+
+@keyframes cursor-blink {
+  50% { opacity: 0; } }
+
+.score-container, .best-container {
+  background: #000;
+  color: var(--green);
+  font-weight: normal;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px var(--green-dim);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.7); }
+
+.score-container:after, .best-container:after {
+  color: var(--green-dim);
+  text-shadow: none; }
+
+.score-container .score-addition, .best-container .score-addition {
+  color: var(--green);
+  font-weight: normal; }
+
+.game-intro {
+  font-size: 16px; }
+
+/* ---------- Buttons ---------- */
+
+.restart-button,
+.game-container .game-message a {
+  background: #000;
+  color: var(--green);
+  border-radius: 0;
+  font-weight: normal;
+  box-shadow: inset 0 0 0 1px var(--green);
+  transition: background 120ms, color 120ms; }
+
+.restart-button:hover,
+.game-container .game-message a:hover {
+  background: var(--green);
+  color: #000; }
+
+.restart-button:before,
+.game-container .game-message a:before {
+  content: "> "; }
+
+/* ---------- Board ---------- */
+
+.game-container {
+  background: rgba(0, 12, 3, 0.92);
+  border-radius: 0;
+  box-shadow: 0 0 0 1px var(--green), 0 0 28px rgba(0, 255, 65, 0.35); }
+
+.grid-cell {
+  border-radius: 0;
+  background: rgba(0, 255, 65, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.12); }
+
+.game-container .game-message {
+  background: rgba(0, 0, 0, 0.8); }
+
+.game-container .game-message p {
+  font-size: 44px;
+  font-weight: normal;
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8); }
+
+.game-container .game-message.game-won {
+  background: rgba(0, 40, 10, 0.85); }
+
+/* ---------- Tiles ---------- */
+
+/* Center the binary block; each 4-bit group sits on its own line. */
+.tile .tile-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-weight: normal; }
+
+.tile .tile-inner .bits {
+  white-space: pre;
+  text-align: right;
+  line-height: 1.05; }
+
+/* Brightness climbs with the value: dim phosphor -> solid glowing green. */
+.tile.tile-2 .tile-inner {
+  background: var(--green-deep);
+  color: #00a82b;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.25); }
+.tile.tile-4 .tile-inner {
+  background: #00220a;
+  color: #00c232;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.3); }
+.tile.tile-8 .tile-inner {
+  background: #002b0c;
+  color: #00dd38;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.4); }
+.tile.tile-16 .tile-inner {
+  background: #00360f;
+  color: var(--green);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.5); }
+.tile.tile-32 .tile-inner {
+  background: #004313;
+  color: var(--green);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.6);
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.6); }
+.tile.tile-64 .tile-inner {
+  background: #005318;
+  color: #4dff7a;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.7);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.7); }
+.tile.tile-128 .tile-inner {
+  background: #00661d;
+  color: #80ffa0;
+  box-shadow: inset 0 0 0 1px var(--green), 0 0 12px rgba(0, 255, 65, 0.35);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.8); }
+.tile.tile-256 .tile-inner {
+  background: #007a23;
+  color: #b3ffc6;
+  box-shadow: inset 0 0 0 1px var(--green), 0 0 16px rgba(0, 255, 65, 0.4);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.9); }
+.tile.tile-512 .tile-inner {
+  background: #00962a;
+  color: #e0ffe8;
+  box-shadow: inset 0 0 0 1px var(--green), 0 0 20px rgba(0, 255, 65, 0.5);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 1); }
+.tile.tile-1024 .tile-inner {
+  background: #00cc38;
+  color: #001a07;
+  box-shadow: 0 0 26px rgba(0, 255, 65, 0.6);
+  text-shadow: none; }
+.tile.tile-2048 .tile-inner {
+  background: var(--green);
+  color: #000;
+  box-shadow: 0 0 34px rgba(0, 255, 65, 0.8);
+  text-shadow: none; }
+/* Pulse lives on the wrapper so it doesn't replace the inner pop/appear animations. */
+.tile.tile-2048 {
+  animation: tile-pulse 1.6s ease-in-out infinite; }
+.tile.tile-super .tile-inner {
+  background: #d6ffd9;
+  color: #000;
+  box-shadow: 0 0 40px rgba(214, 255, 217, 0.9);
+  text-shadow: none; }
+
+@keyframes tile-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(0, 255, 65, 0)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(0, 255, 65, 0.9)); } }
+
+/* Font sizes: single-line tiles get their own size; stacked tiles size
+   by how many 4-bit lines they have. These come after main.css's
+   per-value sizes, so they win at equal specificity. */
+.tile.tile-2 .tile-inner { font-size: 56px; }
+.tile.tile-4 .tile-inner { font-size: 46px; }
+.tile.tile-8 .tile-inner { font-size: 36px; }
+.tile .tile-inner.bits-lines-2 { font-size: 36px; }
+.tile .tile-inner.bits-lines-3 { font-size: 28px; }
+.tile .tile-inner.bits-lines-4 { font-size: 22px; }
+.tile .tile-inner.bits-lines-5 { font-size: 18px; }
+
+@media screen and (max-width: 520px) {
+  .container {
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.85); }
+
+  .game-intro {
+    font-size: 14px; }
+
+  .tile.tile-2 .tile-inner { font-size: 30px; }
+  .tile.tile-4 .tile-inner { font-size: 24px; }
+  .tile.tile-8 .tile-inner { font-size: 19px; }
+  .tile .tile-inner.bits-lines-2 { font-size: 19px; }
+  .tile .tile-inner.bits-lines-3 { font-size: 15px; }
+  .tile .tile-inner.bits-lines-4 { font-size: 12px; }
+  .tile .tile-inner.bits-lines-5 { font-size: 10px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  h1.title:after,
+  .tile.tile-2048 {
+    animation: none; } }
